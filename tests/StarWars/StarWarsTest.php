@@ -18,9 +18,8 @@ class StarWarsTest extends \PHPUnit\Framework\TestCase
      * @param $query
      * @param $validResult
      * @param $variables
-     *
-     * @dataProvider dataProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProvider')]
     public function testSchema($query, $validResult, $variables)
     {
         $processor = new Processor(new StarWarsSchema());
@@ -61,7 +60,7 @@ class StarWarsTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             [

@@ -24,8 +24,7 @@ use Youshido\GraphQL\Type\Union\AbstractUnionType;
 class ResolveValidator implements ResolveValidatorInterface
 {
 
-    /** @var ExecutionContext */
-    private $executionContext;
+    private ExecutionContext $executionContext;
 
 
     /**

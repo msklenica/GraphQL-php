@@ -16,7 +16,7 @@ final class NonNullType extends AbstractType implements CompositeTypeInterface
 {
     use ConfigAwareTrait;
 
-    private $_typeOf;
+    private AbstractType|string $_typeOf;
 
     /**
      * NonNullType constructor.

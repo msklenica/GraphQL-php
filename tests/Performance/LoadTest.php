@@ -42,7 +42,7 @@ class LoadTest extends \PHPUnit\Framework\TestCase
         $data = [];
         for ($i = 1; $i <= 10000; ++$i) {
             $authors = [];
-            while (count($authors) < rand(1, 4)) {
+            while (count($authors) < random_int(1, 4)) {
                 $authors[] = [
                     'name' => 'Author ' . substr(md5(time()), 0, 4)
                 ];
@@ -60,9 +60,7 @@ class LoadTest extends \PHPUnit\Framework\TestCase
                 'fields' => [
                     'posts' => [
                         'type' => new ListType($postType),
-                        'resolve' => function() use ($data) {
-                            return $data;
-                        }
+                        'resolve' => fn() => $data
                     ]
                 ],
             ]),

@@ -13,11 +13,11 @@ class InputParseTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
-     * @dataProvider queries
      *
      * @param $query
      * @param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('queries')]
     public function testDateInput($query, $expected)
     {
         $schema = new Schema([
@@ -46,7 +46,7 @@ class InputParseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function queries()
+    public static function queries()
     {
         return [
             [

@@ -14,8 +14,7 @@ use Youshido\GraphQL\Parser\Location;
 class FragmentReference extends AbstractAst implements FragmentInterface
 {
 
-    /** @var  string */
-    protected $name;
+    protected string $name;
 
     /**
      * @param string   $name

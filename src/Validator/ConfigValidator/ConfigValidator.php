@@ -21,12 +21,11 @@ class ConfigValidator implements ConfigValidatorInterface
 
     use ErrorContainerTrait;
 
-    protected $rules = [];
+    protected array $rules = [];
 
-    protected $extraFieldsAllowed = false;
+    protected bool $extraFieldsAllowed = false;
 
-    /** @var ValidationRuleInterface[] */
-    protected $validationRules = [];
+    protected array $validationRules = [];
 
     /** @var  ConfigValidator */
     protected static $instance;

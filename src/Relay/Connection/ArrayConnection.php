@@ -48,17 +48,21 @@ class ArrayConnection
         return self::cursorToKey($cursor);
     }
 
-  /**
-   * Converts a cursor to its array key.
-   *
-   * @param $cursor
-   * @return null|string
-   */
-    public static function cursorToKey($cursor) {
-      if ($decoded = base64_decode($cursor)) {
-        return substr($decoded, strlen(self::PREFIX));
-      }
-      return null;
+    /**
+     * Converts a cursor to its array key.
+     *
+     * @param $cursor
+     * @return null|string
+     */
+    public static function cursorToKey($cursor)
+    {
+        if ($cursor === null || !is_string($cursor)) {
+            return null;
+        }
+        if ($decoded = base64_decode($cursor, true)) {
+            return substr($decoded, strlen(self::PREFIX));
+        }
+        return null;
     }
 
   /**
@@ -121,7 +125,7 @@ class ArrayConnection
         $arraySliceEnd      = count($data) - ($sliceEnd - $endOffset) - $arraySliceStart;
 
         $slice = array_slice($data, $arraySliceStart, $arraySliceEnd, true);
-        $edges = array_map(['self', 'edgeForObjectWithIndex'], $slice, array_keys($slice));
+        $edges = array_map([self::class, 'edgeForObjectWithIndex'], $slice, array_keys($slice));
 
         $firstEdge  = array_key_exists(0, $edges) ? $edges[0] : null;
         $lastEdge   = count($edges) > 0 ? $edges[count($edges) - 1] : null;

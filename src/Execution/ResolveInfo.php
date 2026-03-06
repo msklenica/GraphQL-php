@@ -16,23 +16,18 @@ use Youshido\GraphQL\Type\AbstractType;
 
 class ResolveInfo
 {
-    /** @var  FieldInterface */
-    protected $field;
+    protected FieldInterface $field;
 
-    /** @var Field[] */
-    protected $fieldASTList;
+    protected array $fieldASTList;
 
-    /** @var ExecutionContextInterface */
-    protected $executionContext;
+    protected ExecutionContextInterface $executionContext;
 
     /**
      * This property is to be used for DI in various scenario
      * Added to original class to keep backward compatibility
      * because of the way AbstractField::resolve has been declared
-     *
-     * @var mixed $container
      */
-    protected $container;
+    protected mixed $container;
 
     public function __construct(FieldInterface $field, array $fieldASTList, ExecutionContextInterface $executionContext)
     {
@@ -44,7 +39,7 @@ class ResolveInfo
     /**
      * @return ExecutionContextInterface
      */
-    public function getExecutionContext()
+    public function getExecutionContext(): ExecutionContextInterface
     {
         return $this->executionContext;
     }
@@ -52,7 +47,7 @@ class ResolveInfo
     /**
      * @return FieldInterface
      */
-    public function getField()
+    public function getField(): FieldInterface
     {
         return $this->field;
     }
@@ -62,7 +57,7 @@ class ResolveInfo
      *
      * @return null|Query|Field
      */
-    public function getFieldAST($fieldName)
+    public function getFieldAST($fieldName): Field|Query|null
     {
         $field = null;
         foreach ($this->getFieldASTList() as $fieldAST) {
@@ -78,7 +73,7 @@ class ResolveInfo
     /**
      * @return Field[]
      */
-    public function getFieldASTList()
+    public function getFieldASTList(): array
     {
         return $this->fieldASTList;
     }
@@ -86,12 +81,12 @@ class ResolveInfo
     /**
      * @return AbstractType
      */
-    public function getReturnType()
+    public function getReturnType(): AbstractType
     {
         return $this->field->getType();
     }
 
-    public function getContainer()
+    public function getContainer(): mixed
     {
         return $this->executionContext->getContainer();
     }

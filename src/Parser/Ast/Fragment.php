@@ -15,15 +15,13 @@ class Fragment extends AbstractAst
 
     use AstDirectivesTrait;
 
-    protected $name;
+    protected string $name;
 
-    protected $model;
+    protected string $model;
 
-    /** @var Field[]|Query[] */
-    protected $fields;
+    protected array $fields;
 
-    /** @var bool */
-    private $used = false;
+    private bool $used = false;
 
     /**
      * @param string          $name

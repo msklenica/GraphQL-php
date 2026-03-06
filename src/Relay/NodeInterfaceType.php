@@ -16,8 +16,7 @@ use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
 class NodeInterfaceType extends AbstractInterfaceType
 {
 
-    /** @var  FetcherInterface */ //todo: maybe there are better solution
-    protected $fetcher;
+    protected FetcherInterface|null $fetcher = null;
 
     public function getName()
     {

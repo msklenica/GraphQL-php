@@ -13,8 +13,8 @@ use Youshido\GraphQL\Field\InputField;
 
 trait ArgumentsAwareConfigTrait
 {
-    protected $arguments = [];
-    protected $_isArgumentsBuilt;
+    protected array $arguments = [];
+    protected bool $_isArgumentsBuilt = false;
 
     public function buildArguments()
     {

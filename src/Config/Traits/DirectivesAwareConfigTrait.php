@@ -13,8 +13,8 @@ use Youshido\GraphQL\Field\InputField;
 
 trait DirectivesAwareConfigTrait
 {
-    protected $directives = [];
-    protected $_isDirectivesBuilt;
+    protected array $directives = [];
+    protected bool $_isDirectivesBuilt = false;
 
     public function buildDirectives()
     {

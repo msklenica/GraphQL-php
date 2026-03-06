@@ -13,7 +13,7 @@ use Youshido\GraphQL\Directive\DirectiveInterface;
 class SchemaDirectivesList
 {
 
-    private $directivesList = [];
+    private array $directivesList = [];
 
     /**
      * @param array $directives

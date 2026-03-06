@@ -10,6 +10,7 @@ namespace Youshido\GraphQL\Type;
 
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
+
 use Youshido\GraphQL\Type\Enum\AbstractEnumType;
 use Youshido\GraphQL\Type\InputObject\AbstractInputObjectType;
 use Youshido\GraphQL\Type\ListType\AbstractListType;

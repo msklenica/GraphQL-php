@@ -11,10 +11,14 @@ namespace Youshido\GraphQL\Relay\Fetcher;
 class CallableFetcher implements FetcherInterface
 {
 
-    /** @var  callable */
+    /**
+     * @var callable
+     */
     protected $resolveNodeCallable;
 
-    /** @var  callable */
+    /**
+     * @var callable
+     */
     protected $resolveTypeCallable;
 
     public function __construct(callable $resolveNode, callable $resolveType)

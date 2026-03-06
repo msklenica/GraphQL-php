@@ -13,7 +13,7 @@ trait FieldsArgumentsAwareObjectTrait
 {
     use FieldsAwareObjectTrait;
 
-    protected $hasArgumentCache = null;
+    protected bool|null $hasArgumentCache = null;
 
     public function addArguments($argumentsList)
     {

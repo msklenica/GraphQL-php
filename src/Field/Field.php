@@ -7,6 +7,7 @@
 
 namespace Youshido\GraphQL\Field;
 
+use Youshido\GraphQL\Type\AbstractType;
 use Youshido\GraphQL\Type\Object\AbstractObjectType;
 
 /**
@@ -17,10 +18,10 @@ use Youshido\GraphQL\Type\Object\AbstractObjectType;
 final class Field extends AbstractField
 {
 
-    protected $isFinal = true;
+    protected bool $isFinal = true;
 
-    protected $_typeCache = null;
-    protected $_nameCache = null;
+    protected AbstractType|null $_typeCache = null;
+    protected string|null $_nameCache = null;
 
     /**
      * @return AbstractObjectType

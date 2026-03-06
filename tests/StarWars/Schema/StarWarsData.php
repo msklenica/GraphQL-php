@@ -116,11 +116,8 @@ class StarWarsData
     {
         $humans = self::humans();
         $droids = self::droids();
-        if (isset($humans[$id])) {
-            return $humans[$id];
-        }
 
-        return $droids[$id] ?? null;
+        return $humans[$id] ?? $droids[$id] ?? null;
     }
 
     /**

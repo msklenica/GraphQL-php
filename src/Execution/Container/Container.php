@@ -11,9 +11,9 @@ namespace Youshido\GraphQL\Execution\Container;
 class Container implements ContainerInterface
 {
 
-    private $keyset   = [];
-    private $values   = [];
-    private $services = [];
+    private array $keyset   = [];
+    private array $values   = [];
+    private array $services = [];
 
 
     /**

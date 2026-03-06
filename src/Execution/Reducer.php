@@ -24,8 +24,7 @@ use Youshido\GraphQL\Type\Union\AbstractUnionType;
 class Reducer
 {
 
-    /** @var  ExecutionContextInterface */
-    private $executionContext;
+    private ExecutionContextInterface $executionContext;
 
     /**
      * Apply all of $reducers to this query.  Example reducer operations: checking for maximum query complexity,
@@ -34,7 +33,7 @@ class Reducer
      * @param ExecutionContextInterface $executionContext
      * @param AbstractQueryVisitor[]    $reducers
      */
-    public function reduceQuery(ExecutionContextInterface $executionContext, array $reducers)
+    public function reduceQuery(ExecutionContextInterface $executionContext, array $reducers): void
     {
         $this->executionContext = $executionContext;
         $schema                 = $executionContext->getSchema();
@@ -54,7 +53,7 @@ class Reducer
      * @param AbstractType         $currentLevelSchema
      * @param AbstractQueryVisitor $reducer
      */
-    protected function doVisit(Query $query, $currentLevelSchema, $reducer)
+    protected function doVisit(Query $query, AbstractType $currentLevelSchema, AbstractQueryVisitor $reducer): void
     {
         if (!($currentLevelSchema instanceof AbstractObjectType) || !$currentLevelSchema->hasField($query->getName())) {
             return;
@@ -97,7 +96,7 @@ class Reducer
      *
      * @return \Generator
      */
-    protected function walkQuery($queryNode, FieldInterface $currentLevelAST)
+    protected function walkQuery(Query|FieldAst|FragmentInterface $queryNode, FieldInterface $currentLevelAST): \Generator
     {
         $childrenScore = 0;
         if (!($queryNode instanceof FieldAst)) {

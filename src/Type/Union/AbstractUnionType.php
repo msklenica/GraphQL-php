@@ -23,7 +23,7 @@ abstract class AbstractUnionType extends AbstractType implements AbstractInterfa
 
     use ConfigAwareTrait, AutoNameTrait;
 
-    protected $isFinal = false;
+    protected bool $isFinal = false;
 
     /**
      * ObjectType constructor.

@@ -22,7 +22,7 @@ class DirectiveConfig extends AbstractConfig
 
     use ArgumentsAwareConfigTrait;
 
-    protected $locations = [];
+    protected array $locations = [];
 
     public function getRules()
     {

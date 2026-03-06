@@ -17,15 +17,9 @@ use Youshido\GraphQL\Config\Field\FieldConfig;
 class MaxComplexityQueryVisitor extends AbstractQueryVisitor
 {
 
-    /**
-     * @var int max score allowed before throwing an exception (causing processing to stop)
-     */
-    public $maxScore;
+    public int|float $maxScore;
 
-    /**
-     * @var int default score for nodes without explicit cost functions
-     */
-    protected $defaultScore = 1;
+    protected int $defaultScore = 1;
 
     /**
      * MaxComplexityQueryVisitor constructor.

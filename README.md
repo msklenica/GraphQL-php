@@ -74,6 +74,20 @@ composer init -n
 composer require youshido/graphql
 ```
 
+#### Version Requirements
+
+**v2.0.0** (current, recommended):
+- PHP: ^8.3 || ^8.4
+- Symfony: ^6.4 || ^7.4 || ^8.0
+- PHPUnit: ^10.5 (for testing)
+
+**v1.0.2** (legacy):
+- PHP: ^8.3
+- Symfony: ^2.8 || ^3.4 || ^4.4 || ^5.4 || ^6.4
+- PHPUnit: ~9.6 (for testing)
+
+> If you're on Symfony 2.8-5.4, please read the [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) before upgrading to v2.0.0
+
 Now you're ready to create your `GraphQL Schema` and check if everything works fine.
 Your first GraphQL app will be able to receive `currentTime` request and response with a formatted time string.
 > you can find this example in the examples directory – [01_sandbox](https://github.com/Youshido/GraphQL/tree/master/examples/01_sandbox).

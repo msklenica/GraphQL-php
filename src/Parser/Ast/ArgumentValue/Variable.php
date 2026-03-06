@@ -14,32 +14,23 @@ use Youshido\GraphQL\Parser\Location;
 class Variable extends AbstractAst implements ValueInterface
 {
 
-    /** @var  string */
-    private $name;
+    private string $name;
 
-    /** @var  mixed */
-    private $value;
+    private mixed $value = null;
 
-    /** @var string */
-    private $type;
+    private string $type;
 
-    /** @var bool */
-    private $nullable;
+    private bool $nullable;
 
-    /** @var bool */
-    private $isArray;
+    private bool $isArray;
 
-    /** @var bool */
-    private $used = false;
+    private bool $used = false;
 
-    /** @var bool */
-    private $arrayElementNullable;
+    private bool $arrayElementNullable = false;
 
-    /** @var bool */
-    private $hasDefaultValue = false;
+    private bool $hasDefaultValue = false;
 
-    /** @var mixed */
-    private $defaultValue = null;
+    private mixed $defaultValue = null;
 
     /**
      * @param string   $name

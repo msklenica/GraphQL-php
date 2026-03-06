@@ -17,9 +17,11 @@ use Youshido\GraphQL\Config\Object\ObjectTypeConfig;
 trait ConfigAwareTrait
 {
 
-    /** @var AbstractConfig|ObjectTypeConfig|FieldConfig|InputFieldConfig */
+    /**
+     * @var AbstractConfig
+     */
     protected $config;
-    protected $configCache = [];
+    protected array $configCache = [];
 
     public function getConfig()
     {

@@ -11,15 +11,14 @@ use Youshido\GraphQL\Exception\Parser\SyntaxErrorException;
 
 class Tokenizer
 {
-    protected $source;
-    protected $pos = 0;
-    protected $line = 1;
-    protected $lineStart = 0;
+    protected string|null $source = null;
+    protected int $pos = 0;
+    protected int $line = 1;
+    protected int $lineStart = 0;
 
-    /** @var  Token */
-    protected $lookAhead;
+    protected Token $lookAhead;
 
-    protected function initTokenizer($source)
+    protected function initTokenizer(string|null $source): void
     {
         $this->source    = $source;
         $this->lookAhead = $this->next();
@@ -37,22 +36,27 @@ class Tokenizer
 
     protected function skipWhitespace()
     {
-        while ($this->pos < strlen($this->source)) {
-            $ch = $this->source[$this->pos];
+        $source = $this->source;
+        if ($source === null) {
+            return;
+        }
+        
+        while ($this->pos < strlen($source)) {
+            $ch = $source[$this->pos];
             if ($ch === ' ' || $ch === "\t" || $ch === ',') {
                 $this->pos++;
             } elseif ($ch === '#') {
                 $this->pos++;
                 while (
-                    $this->pos < strlen($this->source) &&
-                    ($code = ord($this->source[$this->pos])) &&
+                    $this->pos < strlen($source) &&
+                    ($code = ord($source[$this->pos])) &&
                     $code !== 10 && $code !== 13 && $code !== 0x2028 && $code !== 0x2029
                 ) {
                     $this->pos++;
                 }
             } elseif ($ch === "\r") {
                 $this->pos++;
-                if ($this->source[$this->pos] === "\n") {
+                if ($source[$this->pos] === "\n") {
                     $this->pos++;
                 }
                 $this->line++;
@@ -74,11 +78,12 @@ class Tokenizer
      */
     protected function scan()
     {
-        if ($this->pos >= strlen($this->source)) {
+        $source = $this->source;
+        if ($source === null || $this->pos >= strlen($source)) {
             return new Token(Token::TYPE_END, $this->getLine(), $this->getColumn());
         }
 
-        $ch = $this->source[$this->pos];
+        $ch = $source[$this->pos];
         switch ($ch) {
             case Token::TYPE_LPAREN:
                 ++$this->pos;
@@ -157,11 +162,16 @@ class Tokenizer
 
     protected function checkFragment()
     {
-        $this->pos++;
-        $ch = $this->source[$this->pos];
+        $source = $this->source;
+        if ($source === null) {
+            return false;
+        }
 
         $this->pos++;
-        $nextCh = $this->source[$this->pos];
+        $ch = $source[$this->pos];
+
+        $this->pos++;
+        $nextCh = $source[$this->pos];
 
         $isset = $ch == Token::TYPE_POINT && $nextCh == Token::TYPE_POINT;
 
@@ -176,11 +186,16 @@ class Tokenizer
 
     protected function scanWord()
     {
+        $source = $this->source;
+        if ($source === null) {
+            return new Token(Token::TYPE_END, $this->getLine(), $this->getColumn());
+        }
+
         $start = $this->pos;
         $this->pos++;
 
-        while ($this->pos < strlen($this->source)) {
-            $ch = $this->source[$this->pos];
+        while ($this->pos < strlen($source)) {
+            $ch = $source[$this->pos];
 
             if ($ch === '_' || $ch === '$' || ('a' <= $ch && $ch <= 'z') || ('A' <= $ch && $ch <= 'Z') || ('0' <= $ch && $ch <= '9')) {
                 $this->pos++;
@@ -189,7 +204,7 @@ class Tokenizer
             }
         }
 
-        $value = substr($this->source, $start, $this->pos - $start);
+        $value = substr($source, $start, $this->pos - $start);
 
         return new Token($this->getKeyword($value), $this->getLine(), $this->getColumn(), $value);
     }
@@ -238,19 +253,24 @@ class Tokenizer
 
     protected function scanNumber()
     {
+        $source = $this->source;
+        if ($source === null) {
+            return new Token(Token::TYPE_END, $this->getLine(), $this->getColumn());
+        }
+
         $start = $this->pos;
-        if ($this->source[$this->pos] === '-') {
+        if ($source[$this->pos] === '-') {
             ++$this->pos;
         }
 
         $this->skipInteger();
 
-        if (isset($this->source[$this->pos]) && $this->source[$this->pos] === '.') {
+        if (isset($source[$this->pos]) && $source[$this->pos] === '.') {
             $this->pos++;
             $this->skipInteger();
         }
 
-        $value = substr($this->source, $start, $this->pos - $start);
+        $value = substr($source, $start, $this->pos - $start);
 
         if (strpos($value, '.') === false) {
             $value = (int) $value;
@@ -263,8 +283,13 @@ class Tokenizer
 
     protected function skipInteger()
     {
-        while ($this->pos < strlen($this->source)) {
-            $ch = $this->source[$this->pos];
+        $source = $this->source;
+        if ($source === null) {
+            return;
+        }
+
+        while ($this->pos < strlen($source)) {
+            $ch = $source[$this->pos];
             if ('0' <= $ch && $ch <= '9') {
                 $this->pos++;
             } else {
@@ -294,16 +319,21 @@ class Tokenizer
     }
 
     /*
-  		http://facebook.github.io/graphql/October2016/#sec-String-Value
-    */
+   		http://facebook.github.io/graphql/October2016/#sec-String-Value
+     */
     protected function scanString()
     {
-        $len = strlen($this->source);
+        $source = $this->source;
+        if ($source === null) {
+            throw $this->createException('Unexpected end of input');
+        }
+
+        $len = strlen($source);
         $this->pos++;
 
         $value = '';
         while ($this->pos < $len) {
-            $ch = $this->source[$this->pos];
+            $ch = $source[$this->pos];
             if ($ch === '"') {
                 $token = new Token(Token::TYPE_STRING, $this->getLine(), $this->getColumn(), $value);
                 $this->pos++;
@@ -313,7 +343,7 @@ class Tokenizer
             
             if($ch === '\\' && ($this->pos < ($len - 1))) {
                 $this->pos++;
-                $ch = $this->source[$this->pos];
+                $ch = $source[$this->pos];
                 switch($ch) {
                     case '"':
                     case '\\':
@@ -332,9 +362,9 @@ class Tokenizer
                         $ch = "\r";
                         break;
                     case 'u':
-                        $codepoint = substr($this->source, $this->pos + 1, 4);
+                        $codepoint = substr($source, $this->pos + 1, 4);
                         if( !preg_match('/[0-9A-Fa-f]{4}/', $codepoint)) {
-                            throw $this->createException(sprintf('Invalid string unicode escape sequece "%s"', $codepoint));
+                            throw $this->createException(sprintf('Invalid unicode escape sequence in string literal "%s"', $codepoint));
                         }
                         $ch = html_entity_decode("&#x{$codepoint};", ENT_QUOTES, 'UTF-8');
                         $this->pos += 4;
@@ -353,17 +383,17 @@ class Tokenizer
         throw $this->createUnexpectedTokenTypeException(Token::TYPE_END);
     }
 
-    protected function end()
+    protected function end(): bool
     {
         return $this->lookAhead->getType() === Token::TYPE_END;
     }
 
-    protected function peek()
+    protected function peek(): Token
     {
         return $this->lookAhead;
     }
 
-    protected function lex()
+    protected function lex(): Token
     {
         $prev            = $this->lookAhead;
         $this->lookAhead = $this->next();
@@ -371,12 +401,12 @@ class Tokenizer
         return $prev;
     }
 
-    protected function createUnexpectedException(Token $token)
+    protected function createUnexpectedException(Token $token): SyntaxErrorException
     {
         return $this->createUnexpectedTokenTypeException($token->getType());
     }
 
-    protected function createUnexpectedTokenTypeException($tokenType)
+    protected function createUnexpectedTokenTypeException($tokenType): SyntaxErrorException
     {
         return $this->createException(sprintf('Unexpected token "%s"', Token::tokenName($tokenType)));
     }

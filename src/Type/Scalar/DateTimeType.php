@@ -11,7 +11,7 @@ namespace Youshido\GraphQL\Type\Scalar;
 class DateTimeType extends AbstractScalarType
 {
 
-    private $format;
+    private string $format;
 
     public function __construct($format = 'Y-m-d H:i:s')
     {

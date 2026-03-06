@@ -117,9 +117,8 @@ TEXT;
     /**
      * @param $query
      * @param $expectedResponse
-     *
-     * @dataProvider predefinedSchemaProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('predefinedSchemaProvider')]
     public function testPredefinedQueries($query, $expectedResponse)
     {
         $schema = new TestEmptySchema();
@@ -153,7 +152,7 @@ TEXT;
         $this->assertEquals($expectedResponse, $responseData);
     }
 
-    public function predefinedSchemaProvider()
+    public static function predefinedSchemaProvider()
     {
         return [
             [

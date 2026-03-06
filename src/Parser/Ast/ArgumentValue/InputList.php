@@ -15,7 +15,7 @@ use Youshido\GraphQL\Parser\Location;
 class InputList extends AbstractAst implements ValueInterface
 {
 
-    protected $list = [];
+    protected array $list = [];
 
     /**
      * @param array    $list

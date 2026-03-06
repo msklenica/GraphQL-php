@@ -11,7 +11,7 @@ namespace Youshido\GraphQL\Type\Union;
 final class UnionType extends AbstractUnionType
 {
 
-    protected $isFinal = true;
+    protected bool $isFinal = true;
 
     public function resolveType($object)
     {
