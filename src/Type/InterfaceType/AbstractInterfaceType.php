@@ -20,7 +20,7 @@ abstract class AbstractInterfaceType extends AbstractType
 {
     use FieldsAwareObjectTrait, AutoNameTrait;
 
-    protected $isBuilt = false;
+    protected bool $isBuilt = false;
 
     public function getConfig()
     {

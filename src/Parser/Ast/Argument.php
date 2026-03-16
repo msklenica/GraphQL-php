@@ -14,11 +14,9 @@ use Youshido\GraphQL\Parser\Location;
 class Argument extends AbstractAst
 {
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var ValueInterface */
-    private $value;
+    private mixed $value;
 
     /**
      * @param string         $name

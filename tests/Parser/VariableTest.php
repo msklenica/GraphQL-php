@@ -9,9 +9,8 @@ class VariableTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test if variable value equals expected value
-     *
-     * @dataProvider variableProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('variableProvider')]
     public function testGetValue($actual, $expected)
     {
         $var = new Variable('foo', 'bar', false, false, true, new Location(1,1));

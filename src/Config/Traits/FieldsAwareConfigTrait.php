@@ -22,7 +22,7 @@ use Youshido\GraphQL\Type\InterfaceType\AbstractInterfaceType;
  */
 trait FieldsAwareConfigTrait
 {
-    protected $fields = [];
+    protected array $fields = [];
 
     public function buildFields()
     {

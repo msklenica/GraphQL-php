@@ -26,10 +26,19 @@ abstract class AbstractConfig
      */
     protected $data = [];
 
-    protected $contextObject;
+    /**
+     * @var object|null
+     */
+    protected $contextObject = null;
 
+    /**
+     * @var bool
+     */
     protected $finalClass = false;
 
+    /**
+     * @var bool|null
+     */
     protected $extraFieldsAllowed = null;
 
     /**
@@ -42,7 +51,7 @@ abstract class AbstractConfig
      * @throws ConfigurationException
      * @throws ValidationException
      */
-    public function __construct(array $configData, $contextObject = null, $finalClass = false)
+    public function __construct(array $configData, object|null $contextObject = null, bool|null $finalClass = false)
     {
         if (empty($configData)) {
             throw new ConfigurationException('Config for Type should be an array');
@@ -129,24 +138,24 @@ abstract class AbstractConfig
      *
      * @return mixed|null|callable
      */
-    public function get($key, $defaultValue = null)
+    public function get(string|int $key, mixed $defaultValue = null)
     {
         return $this->has($key) ? $this->data[$key] : $defaultValue;
     }
 
-    public function set($key, $value)
+    public function set(string|int $key, mixed $value)
     {
         $this->data[$key] = $value;
 
         return $this;
     }
 
-    public function has($key)
+    public function has(string|int $key)
     {
         return array_key_exists($key, $this->data);
     }
 
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments): mixed
     {
         if (substr($method, 0, 3) == 'get') {
             $propertyName = lcfirst(substr($method, 3));

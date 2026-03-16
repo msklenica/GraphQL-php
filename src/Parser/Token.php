@@ -41,17 +41,13 @@ class Token
     const TYPE_FALSE = 'false';
 
 
-    /** @var mixed */
-    private $data;
+    private mixed $data;
 
-    /** @var  string */
-    private $type;
+    private string $type;
 
-    /** @var integer */
-    private $line;
+    private int $line;
 
-    /** @var integer */
-    private $column;
+    private int $column;
 
     public function __construct($type, $line, $column, $data = null)
     {

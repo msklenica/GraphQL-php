@@ -23,7 +23,7 @@ class NodeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(1, $fromGlobal[1]);
     }
 
-    public function malformedIdProvider()
+    public static function malformedIdProvider()
     {
         return [
             [''],
@@ -32,9 +32,7 @@ class NodeTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider malformedIdProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('malformedIdProvider')]
     public function testFromGlobalIdThrowsExceptionIfGivenMalformedId($idToCheck)
     {
         $this->expectException(InvalidArgumentException::class);

@@ -22,11 +22,9 @@ use Youshido\GraphQL\Type\Scalar\IdType;
 class NodeField extends AbstractField
 {
 
-    /** @var  FetcherInterface */
-    protected $fetcher;
+    protected FetcherInterface $fetcher;
 
-    /** @var NodeInterfaceType */
-    protected $type;
+    protected NodeInterfaceType $type;
 
     public function __construct(FetcherInterface $fetcher)
     {

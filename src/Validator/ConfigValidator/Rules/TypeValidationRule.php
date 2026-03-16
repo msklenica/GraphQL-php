@@ -19,7 +19,7 @@ use Youshido\GraphQL\Validator\ConfigValidator\ConfigValidator;
 class TypeValidationRule implements ValidationRuleInterface
 {
 
-    private $configValidator;
+    private ConfigValidator $configValidator;
 
     public function __construct(ConfigValidator $validator)
     {

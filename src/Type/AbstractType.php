@@ -14,7 +14,7 @@ use Youshido\GraphQL\Type\Object\AbstractObjectType;
 abstract class AbstractType implements TypeInterface
 {
 
-    protected $lastValidationError = null;
+    protected mixed $lastValidationError = null;
 
     public function isCompositeType()
     {
@@ -45,27 +45,27 @@ abstract class AbstractType implements TypeInterface
         return $this;
     }
 
-    public function getValidationError($value = null)
+    public function getValidationError(mixed $value = null)
     {
         return $this->lastValidationError;
     }
 
-    public function isValidValue($value)
+    public function isValidValue(mixed $value)
     {
         return true;
     }
 
-    public function parseValue($value)
+    public function parseValue(mixed $value)
     {
         return $value;
     }
 
-    public function parseInputValue($value)
+    public function parseInputValue(mixed $value)
     {
         return $this->parseValue($value);
     }
 
-    public function serialize($value)
+    public function serialize(mixed $value)
     {
         return $value;
     }

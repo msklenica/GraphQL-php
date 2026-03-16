@@ -20,6 +20,7 @@ use Youshido\GraphQL\Parser\Ast\ArgumentValue\InputObject as AstInputObject;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\Literal as AstLiteral;
 use Youshido\GraphQL\Parser\Ast\ArgumentValue\VariableReference;
 use Youshido\GraphQL\Parser\Ast\Field as AstField;
+use Youshido\GraphQL\Parser\Ast\Fragment;
 use Youshido\GraphQL\Parser\Ast\FragmentReference;
 use Youshido\GraphQL\Parser\Ast\Interfaces\FieldInterface as AstFieldInterface;
 use Youshido\GraphQL\Parser\Ast\Mutation as AstMutation;
@@ -45,23 +46,17 @@ class Processor
 
     const TYPE_NAME_QUERY = '__typename';
 
-    /** @var ExecutionContext */
-    protected $executionContext;
+    protected ExecutionContext $executionContext;
 
-    /** @var ResolveValidatorInterface */
-    protected $resolveValidator;
+    protected ResolveValidatorInterface $resolveValidator;
 
-    /** @var  array */
-    protected $data;
+    protected array $data;
 
-    /** @var int */
-    protected $maxComplexity;
+    protected int $maxComplexity = 0;
 
-    /** @var array DeferredResult[] */
-    protected $deferredResultsLeaf = [];
+    protected array $deferredResultsLeaf = [];
 
-    /** @var array DeferredResult[] */
-    protected $deferredResultsComplex = [];
+    protected array $deferredResultsComplex = [];
 
     public function __construct(AbstractSchema $schema)
     {
@@ -73,7 +68,7 @@ class Processor
         $this->resolveValidator = new ResolveValidator($this->executionContext);
     }
 
-    public function processPayload($payload, $variables = [], $reducers = [])
+    public function processPayload(string $payload, array $variables = [], array $reducers = []): self
     {
         $this->data = [];
 
@@ -103,24 +98,36 @@ class Processor
             // If the processor found any deferred results, resolve them now.
             if (!empty($this->data) && (!empty($this->deferredResultsLeaf) || !empty($this->deferredResultsComplex))) {
               try {
-                  while ($deferredResolver = array_shift($this->deferredResultsComplex)) {
-                      $deferredResolver->resolve();
-                  }
+                   while ($deferredResolver = array_shift($this->deferredResultsComplex)) {
+                       $deferredResolver->resolve();
+                   }
 
-                  // Deferred scalar and enum fields should be resolved last to
-                  // pick up as many as possible for a single batch.
-                  while ($deferredResolver = array_shift($this->deferredResultsLeaf)) {
-                      $deferredResolver->resolve();
-                  }
-              } catch (\Exception $e) {
-                  $this->executionContext->addError($e);
-              } finally {
-                  $this->data = static::unpackDeferredResults($this->data);
+                   // Deferred scalar and enum fields should be resolved last to
+                   // pick up as many as possible for a single batch.
+                    while ($deferredResolver = array_shift($this->deferredResultsLeaf)) {
+                        $deferredResolver->resolve();
+                    }
+                } catch (ResolveException $e) {
+                    $this->executionContext->addError($e);
+                } catch (\Throwable $e) {
+                    $location = null;
+                    if ($e instanceof \Youshido\GraphQL\Exception\Interfaces\LocationableExceptionInterface) {
+                        $location = $e->getLocation();
+                    }
+                    $this->executionContext->addError(new ResolveException($e->getMessage(), $location));
+                } finally {
+                   $this->data = static::unpackDeferredResults($this->data);
               }
             }
 
-        } catch (\Exception $e) {
+        } catch (ResolveException $e) {
             $this->executionContext->addError($e);
+        } catch (\Throwable $e) {
+            $location = null;
+            if ($e instanceof \Youshido\GraphQL\Exception\Interfaces\LocationableExceptionInterface) {
+                $location = $e->getLocation();
+            }
+            $this->executionContext->addError(new ResolveException($e->getMessage(), $location));
         }
 
         return $this;
@@ -135,7 +142,7 @@ class Processor
      * @return mixed
      *   The unpacked result.
      */
-    public static function unpackDeferredResults($result)
+    public static function unpackDeferredResults($result): mixed
     {
         while ($result instanceof DeferredResult) {
             $result = $result->result;
@@ -169,7 +176,7 @@ class Processor
         return [$this->getAlias($query) => $value];
     }
 
-    protected function resolveField(FieldInterface $field, AstFieldInterface $ast, $parentValue = null, $fromObject = false)
+    protected function resolveField(FieldInterface $field, AstFieldInterface $ast, mixed $parentValue = null, bool $fromObject = false)
     {
         try {
             /** @var AbstractObjectType $type */
@@ -240,7 +247,7 @@ class Processor
         }
     }
 
-    private function prepareArgumentValue($argumentValue, AbstractType $argumentType, Request $request)
+    private function prepareArgumentValue(mixed $argumentValue, AbstractType $argumentType, Request $request)
     {
         switch ($argumentType->getKind()) {
             case TypeMap::KIND_LIST:
@@ -305,7 +312,7 @@ class Processor
         throw new ResolveException('Argument type not supported');
     }
 
-    private function getVariableReferenceArgumentValue(VariableReference $variableReference, AbstractType $argumentType, Request $request)
+    private function getVariableReferenceArgumentValue(VariableReference $variableReference, AbstractType $argumentType, Request $request): mixed
     {
         $variable = $variableReference->getVariable();
         if ($argumentType->getKind() === TypeMap::KIND_LIST) {
@@ -338,7 +345,7 @@ class Processor
      * @param                    $resolvedValue
      * @return array
      */
-    private function collectResult(FieldInterface $field, AbstractObjectType $type, $ast, $resolvedValue)
+    private function collectResult(FieldInterface $field, AbstractObjectType $type, AstFieldInterface|Fragment|TypedFragmentReference $ast, mixed $resolvedValue): array
     {
         $results = [];
 
@@ -396,7 +403,7 @@ class Processor
     /**
      * Apply post-process callbacks to all deferred resolvers.
      */
-    protected function deferredResolve($resolvedValue, FieldInterface $field, callable $callback) {
+    protected function deferredResolve(mixed $resolvedValue, FieldInterface $field, callable $callback): mixed {
         if ($resolvedValue instanceof DeferredResolverInterface) {
             $deferredResult = new DeferredResult($resolvedValue, function ($resolvedValue) use ($field, $callback) {
                 // Allow nested deferred resolvers.
@@ -418,7 +425,7 @@ class Processor
         return $callback($resolvedValue);
     }
 
-    protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, $parentValue)
+    protected function resolveScalar(FieldInterface $field, AstFieldInterface $ast, mixed $parentValue)
     {
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
         return $this->deferredResolve($resolvedValue, $field, function($resolvedValue) use ($field) {
@@ -431,7 +438,7 @@ class Processor
         });
     }
 
-    protected function resolveList(FieldInterface $field, AstFieldInterface $ast, $parentValue)
+    protected function resolveList(FieldInterface $field, AstFieldInterface $ast, mixed $parentValue)
     {
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
@@ -500,7 +507,7 @@ class Processor
         });
     }
 
-    protected function resolveObject(FieldInterface $field, AstFieldInterface $ast, $parentValue, $fromUnion = false)
+    protected function resolveObject(FieldInterface $field, AstFieldInterface $ast, mixed $parentValue, bool $fromUnion = false)
     {
         $resolvedValue = $parentValue;
         if (!$fromUnion) {
@@ -524,7 +531,7 @@ class Processor
         });
     }
 
-    protected function resolveComposite(FieldInterface $field, AstFieldInterface $ast, $parentValue)
+    protected function resolveComposite(FieldInterface $field, AstFieldInterface $ast, mixed $parentValue)
     {
         /** @var AstQuery $ast */
         $resolvedValue = $this->doResolve($field, $ast, $parentValue);
@@ -564,10 +571,10 @@ class Processor
         });
     }
 
-    protected function parseAndCreateRequest($payload, $variables = [])
+    protected function parseAndCreateRequest(string $payload, array $variables = []): void
     {
         if (empty($payload)) {
-            throw new \InvalidArgumentException('Must provide an operation.');
+            throw new ResolveException('Must provide an operation.');
         }
 
         $parser  = new Parser();
@@ -578,7 +585,7 @@ class Processor
         $this->executionContext->setRequest($request);
     }
 
-    protected function doResolve(FieldInterface $field, AstFieldInterface $ast, $parentValue = null)
+    protected function doResolve(FieldInterface $field, AstFieldInterface $ast, mixed $parentValue = null)
     {
         /** @var AstQuery|AstField $ast */
         $arguments = $this->parseArgumentsValues($field, $ast);
@@ -587,7 +594,7 @@ class Processor
         return $field->resolve($parentValue, $arguments, $this->createResolveInfo($field, $astFields));
     }
 
-    protected function parseArgumentsValues(FieldInterface $field, AstFieldInterface $ast)
+    protected function parseArgumentsValues(FieldInterface $field, AstFieldInterface $ast): array
     {
         $values   = [];
         $defaults = [];
@@ -644,12 +651,12 @@ class Processor
      *
      * @return ExecutionContext
      */
-    public function getExecutionContext()
+    public function getExecutionContext(): ExecutionContext
     {
         return $this->executionContext;
     }
 
-    public function getResponseData()
+    public function getResponseData(): array
     {
         $result = [];
 
@@ -667,7 +674,7 @@ class Processor
     /**
      * @return int
      */
-    public function getMaxComplexity()
+    public function getMaxComplexity(): int
     {
         return $this->maxComplexity;
     }
@@ -675,7 +682,7 @@ class Processor
     /**
      * @param int $maxComplexity
      */
-    public function setMaxComplexity($maxComplexity)
+    public function setMaxComplexity(int $maxComplexity): void
     {
         $this->maxComplexity = $maxComplexity;
     }

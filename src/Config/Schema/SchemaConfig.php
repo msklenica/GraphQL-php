@@ -19,14 +19,8 @@ use Youshido\GraphQL\Type\TypeService;
 class SchemaConfig extends AbstractConfig
 {
 
-    /**
-     * @var SchemaTypesList
-     */
-    private $typesList;
-    /**
-     * @var SchemaDirectivesList;
-     */
-    private $directiveList;
+    private SchemaTypesList $typesList;
+    private SchemaDirectivesList $directiveList;
 
     public function __construct(array $configData, $contextObject = null, $finalClass = false)
     {

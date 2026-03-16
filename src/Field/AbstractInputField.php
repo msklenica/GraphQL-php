@@ -20,7 +20,7 @@ abstract class AbstractInputField implements InputFieldInterface
 
     use FieldsArgumentsAwareObjectTrait, AutoNameTrait;
 
-    protected $isFinal = false;
+    protected bool $isFinal = false;
 
     public function __construct(array $config = [])
     {

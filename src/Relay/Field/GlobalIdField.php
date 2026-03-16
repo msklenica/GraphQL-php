@@ -18,8 +18,7 @@ use Youshido\GraphQL\Type\Scalar\IdType;
 class GlobalIdField extends AbstractField
 {
 
-    /** @var  string */
-    protected $typeName;
+    protected string $typeName;
 
     /**
      * @param string $typeName

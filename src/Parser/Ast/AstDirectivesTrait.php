@@ -11,10 +11,9 @@ namespace Youshido\GraphQL\Parser\Ast;
 trait AstDirectivesTrait
 {
 
-    /** @var Directive[] */
-    protected $directives;
+    protected array $directives;
 
-    private $directivesCache = null;
+    private array|null $directivesCache = null;
 
 
     public function hasDirectives()

@@ -24,9 +24,9 @@ abstract class AbstractField implements FieldInterface
     use AutoNameTrait {
         getName as getAutoName;
     }
-    protected $isFinal = false;
+    protected bool $isFinal = false;
 
-    private $nameCache            = null;
+    private string|null $nameCache = null;
 
     public function __construct(array $config = [])
     {

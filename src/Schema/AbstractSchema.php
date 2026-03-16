@@ -16,8 +16,7 @@ use Youshido\GraphQL\Type\SchemaDirectivesList;
 abstract class AbstractSchema
 {
 
-    /** @var SchemaConfig */
-    protected $config;
+    protected SchemaConfig $config;
 
     public function __construct($config = [])
     {

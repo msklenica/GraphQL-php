@@ -37,15 +37,14 @@ class TypeValidationRuleTest extends \PHPUnit\Framework\TestCase
      * @param      $ruleInfo
      * @param      $data
      * @param bool $isValid
-     *
-     * @dataProvider simpleRulesProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('simpleRulesProvider')]
     public function testSimpleRules($ruleInfo, $data, $isValid = true)
     {
         $this->assertEquals($isValid, $this->rule->validate($data, $ruleInfo));
     }
 
-    public function simpleRulesProvider()
+    public static function simpleRulesProvider()
     {
         return [
             [TypeService::TYPE_ARRAY_OF_FIELDS_CONFIG, ["fieldName" => new StringType()]],
@@ -81,9 +80,8 @@ class TypeValidationRuleTest extends \PHPUnit\Framework\TestCase
      * @param      $ruleInfo
      * @param      $data
      * @param bool $isValid
-     *
-     * @dataProvider complexRuleProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('complexRuleProvider')]
     public function testComplexRules($ruleInfo, $data, $isValid = true)
     {
         $this->assertEquals($isValid, $this->rule->validate($data, $ruleInfo));

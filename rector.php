@@ -9,12 +9,13 @@ return RectorConfig::configure()
         // __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
-    ->withPhpSets(php83: true)
+    ->withPhpSets(php84: true)
     ->withSets([
         PHPUnitSetList::PHPUNIT_50,
         PHPUnitSetList::PHPUNIT_60,
         PHPUnitSetList::PHPUNIT_70,
         PHPUnitSetList::PHPUNIT_80,
         PHPUnitSetList::PHPUNIT_90,
+        PHPUnitSetList::PHPUNIT_100,
         ])
     ->withTypeCoverageLevel(0);

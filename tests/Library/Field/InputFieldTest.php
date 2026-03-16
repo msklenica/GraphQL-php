@@ -169,9 +169,7 @@ TEXT;
         ]);
     }
 
-    /**
-     * @dataProvider invalidInputFieldProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidInputFieldProvider')]
     public function testInvalidInputFieldParams($fieldConfig)
     {
         $this->expectException(\Youshido\GraphQL\Exception\ConfigurationException::class);
@@ -179,7 +177,7 @@ TEXT;
         ConfigValidator::getInstance()->assertValidConfig($field->getConfig());
     }
 
-    public function invalidInputFieldProvider()
+    public static function invalidInputFieldProvider()
     {
         return [
             [

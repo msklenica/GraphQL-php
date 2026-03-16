@@ -7,9 +7,13 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
+    <coverage processUncoveredFiles="true">
+        <include>
             <directory>./src/</directory>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory>./src/Exception</directory>
+            <directory>./src/Validator</directory>
+        </exclude>
+    </coverage>
 </phpunit>

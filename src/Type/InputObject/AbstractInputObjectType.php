@@ -23,7 +23,7 @@ abstract class AbstractInputObjectType extends AbstractType
 
     use AutoNameTrait, FieldsAwareObjectTrait;
 
-    protected $isBuilt = false;
+    protected bool $isBuilt = false;
 
     public function getConfig()
     {

@@ -17,14 +17,11 @@ class Query extends AbstractAst implements FieldInterface
     use AstArgumentsTrait;
     use AstDirectivesTrait;
 
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    /** @var string */
-    protected $alias;
+    protected string|null $alias;
 
-    /** @var Field[]|Query[] */
-    protected $fields = [];
+    protected array $fields = [];
 
     /**
      * Query constructor.

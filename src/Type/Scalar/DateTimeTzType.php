@@ -10,7 +10,7 @@ namespace Youshido\GraphQL\Type\Scalar;
 
 class DateTimeTzType extends AbstractScalarType
 {
-    private $format = 'D, d M Y H:i:s O';
+    private string $format = 'D, d M Y H:i:s O';
 
     public function getName()
     {

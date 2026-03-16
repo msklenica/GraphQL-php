@@ -81,12 +81,12 @@ class VariablesTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider queries
      *
      * @param $query
      * @param $expected
      * @param $variables
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('queries')]
     public function testVariables($query, $expected, $variables)
     {
         $schema = new Schema([
@@ -111,7 +111,7 @@ class VariablesTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function queries()
+    public static function queries()
     {
         return [
             [

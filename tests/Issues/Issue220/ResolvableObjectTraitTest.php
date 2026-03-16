@@ -8,7 +8,7 @@ use Youshido\GraphQL\Type\Object\AbstractObjectType;
 use Youshido\GraphQL\Type\Scalar\StringType;
 use Youshido\Tests\DataProvider\TestResolveInfo;
 
-class Issue220Test extends TestCase
+class ResolvableObjectTraitTest extends TestCase
 {
 
     public function testValueNotFoundInResolveScalarType()

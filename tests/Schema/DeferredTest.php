@@ -65,7 +65,7 @@ class DeferredQueryBuffer
     {
         if (!array_key_exists($resultId, $this->results)) {
             $query = array_unique(
-              array_reduce($this->buffer, 'array_merge', [])
+              array_reduce($this->buffer, array_merge(...), [])
             );
             sort($query);
             $result = $this->database->query($query);
@@ -181,6 +181,7 @@ class DeferredSchema extends AbstractSchema
 class DeferredTest extends \PHPUnit\Framework\TestCase
 {
 
+    use \Prophecy\PhpUnit\ProphecyTrait;
     /**
      * @var Processor
      */

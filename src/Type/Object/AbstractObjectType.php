@@ -24,7 +24,7 @@ abstract class AbstractObjectType extends AbstractType
 {
     use AutoNameTrait, FieldsArgumentsAwareObjectTrait;
 
-    protected $isBuilt = false;
+    protected bool $isBuilt = false;
 
     public function getConfig()
     {

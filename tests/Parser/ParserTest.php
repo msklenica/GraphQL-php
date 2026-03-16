@@ -137,9 +137,8 @@ GRAPHQL;
 
     /**
      * @param $query string
-     *
-     * @dataProvider wrongQueriesProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('wrongQueriesProvider')]
     public function testWrongQueries($query)
     {
         $this->expectException(\Youshido\GraphQL\Exception\Parser\SyntaxErrorException::class);
@@ -402,7 +401,7 @@ GRAPHQL;
         ], $data);
     }
 
-    public function wrongQueriesProvider()
+    public static function wrongQueriesProvider()
     {
         return [
             ['{ test (a: "asd", b: <basd>) { id }'],
@@ -417,9 +416,7 @@ GRAPHQL;
         ];
     }
 
-    /**
-     * @dataProvider mutationProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mutationProvider')]
     public function testMutations($query, $structure)
     {
         $parser = new Parser();
@@ -459,7 +456,7 @@ GRAPHQL;
         ]);
     }
 
-    public function mutationProvider()
+    public static function mutationProvider()
     {
         return [
             [
@@ -548,9 +545,7 @@ GRAPHQL;
         ];
     }
 
-    /**
-     * @dataProvider queryProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('queryProvider')]
     public function testParser($query, $structure)
     {
         $parser          = new Parser();
@@ -560,7 +555,7 @@ GRAPHQL;
     }
 
 
-    public function queryProvider()
+    public static function queryProvider()
     {
         return [
             [

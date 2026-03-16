@@ -12,7 +12,7 @@ namespace Youshido\GraphQL\Type;
 class SchemaTypesList
 {
 
-    private $typesList = [];
+    private array $typesList = [];
 
     /**
      * @param array $types
