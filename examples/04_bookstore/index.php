@@ -9,8 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
     return;
 }
 if ($_SERVER['REQUEST_URI'] == '/graphiql.css') {
-    header('Content-Type: text/css');
-    readfile(__DIR__ . '/../GraphiQL/graphiql.css');
+    http_response_code(404);
     die();
 }
 
@@ -35,8 +34,9 @@ $payload   = isset($requestData['query']) ? $requestData['query'] : null;
 $variables = isset($requestData['variables']) ? $requestData['variables'] : null;
 
 if (empty($payload)) {
-    $GraphiQLData = file_get_contents(__DIR__ . '/../GraphiQL/index.html');
-    echo $GraphiQLData;
+    http_response_code(400);
+    header('Content-Type: application/json');
+    echo json_encode(['errors' => [['message' => 'Provide a GraphQL "query" in the request payload.']]]);
     die();
 }
 $processor = new Processor($schema);

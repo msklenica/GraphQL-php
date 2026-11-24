@@ -2,6 +2,14 @@
 
 Please update this file right before tagging a new release
 
+## v2.0.1
+
+### Security
+
+- Removed the bundled GraphiQL 0.10.1 assets from `examples/GraphiQL/` (CVE-2021-41248, schema template injection, fixed in GraphiQL 1.4.7). Use the explorer shipped by `99designs/graphql-bundle` or any GraphiQL 1.4.7+ client instead.
+- Example servers (`examples/03_relay_star_wars`, `examples/04_bookstore`) no longer serve the removed assets: `/graphiql.css` returns HTTP 404, and a request without `query` returns HTTP 400 with a JSON error.
+- Added `.gitattributes` excluding `examples/` and `tests/` from Composer dist archives (`export-ignore`).
+
 ## v2.0.0
 
 ### ⚠️ BREAKING CHANGES

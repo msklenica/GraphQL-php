@@ -1206,7 +1206,5 @@ This abstract class can help you to not forget about `OutputType` by forcing you
 This section will be updating on a regular basis with the useful links and references that might help you to quicker become a better GraphQL developer.
 
 ### GraphiQL Tool
-To improve our testing experience even more we suggest to start using GraphiQL client, that's included in our examples. It's a JavaScript GraphQL Schema Explorer.
-To use it – run the `server.sh` from the `examples/02_blog/` folder and open the `examples/GraphiQL/index.html` file in your browser.
-You'll see a nice looking editor that has an autocomplete function and contains all information about your current Schema on the right side in the Docs sidebar:
-![GraphiQL Interface](https://raw.githubusercontent.com/Youshido/GraphQL/master/examples/GraphiQL/screenshot.png)
+To improve our testing experience even more we suggest to start using a GraphiQL client. It's a JavaScript GraphQL Schema Explorer.
+Bundled GraphiQL assets were removed from this repository (CVE-2021-41248 in GraphiQL < 1.4.1). Use the explorer shipped with `99designs/graphql-bundle`, or point any GraphiQL 1.4.1+ client at the example server URL.
