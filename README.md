@@ -55,6 +55,7 @@ GraphQL advanced in many ways and has fundamental quality improvements:
   * [Mutation helper class](#mutation-helper-class)
 * [Useful information](#useful-information)
   * [GraphiQL tool](#graphiql-tool)
+* [Release Workflow (fork)](#release-workflow-fork)
 
 ## Getting Started
 
@@ -1208,3 +1209,32 @@ This section will be updating on a regular basis with the useful links and refer
 ### GraphiQL Tool
 To improve our testing experience even more we suggest to start using a GraphiQL client. It's a JavaScript GraphQL Schema Explorer.
 Bundled GraphiQL assets were removed from this repository (CVE-2021-41248 in GraphiQL < 1.4.1). Use the explorer shipped with `99designs/graphql-bundle`, or point any GraphiQL 1.4.1+ client at the example server URL.
+
+## Release Workflow (fork)
+
+Consumers (`99designs/graphql-bundle`, avcmp-api) pull this fork via Composer VCS repository, so **every tag is a release**.
+Composer resolves the highest tag, no matter which branch it sits on.
+
+Rules:
+
+1. Do the work on a `release/X.Y.Z` (or feature) branch and open a PR to `master`.
+2. **Merge first, tag second.** Tag the merge commit on `master`, never the release branch itself.
+   A tag on an unmerged branch is a release that `master` does not contain, so the next release from `master` silently drops those changes.
+3. Before tagging, check that the highest existing tag is already in `master`. This catches fixes left behind on unmerged branches:
+
+   ```bash
+   git checkout master && git pull && git fetch --tags
+   prev=$(git tag --sort=-v:refname | head -1)
+   git merge-base --is-ancestor "$prev" HEAD && echo "OK: $prev is in master" || echo "STOP: $prev is NOT in master"
+   ```
+
+   If it prints `STOP`, merge that tag into `master` before you release.
+
+4. Run the tests and move `[Unreleased]` in `CHANGELOG.md` to the new version.
+5. Tag and push using one style only, `vX.Y.Z`, as an annotated tag:
+
+   ```bash
+   git tag -a vX.Y.Z -m "vX.Y.Z" && git push origin master vX.Y.Z
+   ```
+
+6. Release the bundle (`msklenica/GraphQLBundle`) against the new version, then run `composer update 99designs/graphql 99designs/graphql-bundle` in the consuming app and run its test suite.
